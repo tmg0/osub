@@ -1,4 +1,4 @@
-package shared
+package types
 
 type V2rayConfig struct {
 	LogLevel  string          `json:"loglevel"`
@@ -25,13 +25,4 @@ type V2rayRule struct {
 	Type        string `json:"type"`
 	InboundTag  string `json:"inboundTag"`
 	OutboundTag string `json:"outboundTag"`
-}
-
-type OsubSubscription struct {
-	URL string `json:"url"`
-}
-
-type OsubConfig struct {
-	Interval      string              `json:"interval"`
-	Subscriptions []*OsubSubscription `json:"subscriptions"`
 }

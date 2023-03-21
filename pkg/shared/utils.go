@@ -3,10 +3,11 @@ package shared
 import (
 	"encoding/json"
 	"os"
+	"osub/pkg/shared/types"
 	"path/filepath"
 )
 
-func ReadConfig() (*OsubConfig, error) {
+func ReadConfig() (*types.OsubConfig, error) {
 	path, err := os.Executable()
 
 	if err != nil {
@@ -22,7 +23,7 @@ func ReadConfig() (*OsubConfig, error) {
 	}
 	defer file.Close()
 
-	var conf OsubConfig
+	var conf types.OsubConfig
 
 	err = json.NewDecoder(file).Decode(&conf)
 	if err != nil {
