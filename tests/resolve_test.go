@@ -12,6 +12,6 @@ func TestResolveInterval(t *testing.T) {
 	duration, _ := resolve.Interval("10s")
 
 	if duration != expected {
-		t.Errorf("Addition test failed: got %d, expected %d", duration, expected)
+		t.Errorf("Resolve interval test failed: got %d, expected %d", duration, expected)
 	}
 }
