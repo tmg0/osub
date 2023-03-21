@@ -1,28 +1,24 @@
 package types
 
 type V2rayConfig struct {
-	LogLevel  string          `json:"loglevel"`
-	Inbounds  []V2rayInbound  `json:"inbounds"`
+	Log       string          `json:"url"`
 	Outbounds []V2rayOutbound `json:"outbounds"`
-	Routing   V2rayRouting    `json:"routing"`
 }
 
-type V2rayInbound struct {
-	Protocol string `json:"protocol"`
-	Port     int    `json:"port"`
+type V2rayLog struct {
+	Access string `json:"access"`
+	Error  string `json:"error"`
 }
 
 type V2rayOutbound struct {
-	Protocol string      `json:"protocol"`
-	Settings interface{} `json:"settings"`
+	Protocol    string      `json:"protocol"`
+	SendThrough string      `json:"sendThrough"`
+	Tag         string      `json:"tag"`
+	Settings    interface{} `json:"settings"`
 }
 
-type V2rayRouting struct {
-	Rules []V2rayRule `json:"rules"`
-}
-
-type V2rayRule struct {
-	Type        string `json:"type"`
-	InboundTag  string `json:"inboundTag"`
-	OutboundTag string `json:"outboundTag"`
+type V2rayVmessOutbound struct {
+	Address string `json:"address"`
+	Port    int    `json:"port"`
+	UUID    string `json:"uuid"`
 }

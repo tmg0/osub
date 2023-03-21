@@ -16,7 +16,7 @@ import (
 
 var RunCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run the osub service",
+	Short: "Start the osub service",
 	Run: func(cmd *cobra.Command, args []string) {
 		conf, err := shared.ReadConfig()
 
