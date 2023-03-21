@@ -1,15 +1,15 @@
 package tests
 
 import (
-	"osub/pkg/parser"
+	"osub/pkg/resolve"
 	"testing"
 	"time"
 )
 
-func TestIntervalParser(t *testing.T) {
+func TestResolveInterval(t *testing.T) {
 	expected := 10 * time.Second
 
-	duration, _ := parser.Interval("10s")
+	duration, _ := resolve.Interval("10s")
 
 	if duration != expected {
 		t.Errorf("Addition test failed: got %d, expected %d", duration, expected)
