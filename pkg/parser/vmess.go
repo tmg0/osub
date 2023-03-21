@@ -25,7 +25,7 @@ func Vmess(link string) (*VmessConfig, error) {
 	link = strings.TrimPrefix(link, shared.VMESS_PREFIX)
 
 	// Decode Base64
-	data, err := base64.StdEncoding.DecodeString(link)
+	data, err := base64.RawStdEncoding.DecodeString(link)
 	if err != nil {
 		return nil, err
 	}

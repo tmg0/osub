@@ -3,29 +3,54 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"osub/pkg/parser"
+	"osub/pkg/shared"
+	"strings"
 )
 
 func main() {
-	// 定义 Vmess 链接
-	link := "vmess://"
 
-	// 解析 Vmess 链接
-	config, err := parser.Vmess(link)
+	resp, err := http.Get("")
+
 	if err != nil {
-		log.Fatalf("Error parsing Vmess link: %v", err)
+		fmt.Println("Error fetching subscription: ", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatalf("Error request subscription link: %v", err)
 	}
 
-	// 生成 V2Ray 配置
-	v2rayConfig := generateV2rayConfig(config)
+	links, err := parser.Subscription(string(body))
 
-	// 输出 V2Ray 配置
-	v2rayConfigJson, err := json.MarshalIndent(v2rayConfig, "", "  ")
 	if err != nil {
-		log.Fatalf("Error marshaling V2ray config: %v", err)
+		log.Fatalf("Error parsing Subscription link: %v", err)
 	}
-	fmt.Println(string(v2rayConfigJson))
+
+	for _, link := range *links {
+		if strings.HasPrefix(link, shared.VMESS_PREFIX) {
+			config, err := parser.Vmess(link)
+
+			if err != nil {
+				log.Fatalf("Error parsing Vmess link: %v", err)
+			}
+
+			fmt.Println(config)
+		}
+	}
+
+	// v2rayConfig := generateV2rayConfig(config)
+
+	// v2rayConfigJson, err := json.MarshalIndent(v2rayConfig, "", "  ")
+	// if err != nil {
+	// 	log.Fatalf("Error marshaling V2ray config: %v", err)
+	// }
+	// fmt.Println(string(v2rayConfigJson))
 }
 
 func generateV2rayConfig(vmess *parser.VmessConfig) string {
