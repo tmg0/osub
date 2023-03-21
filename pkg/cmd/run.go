@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"os"
+	"io"
 	"log"
   "strings"
 	"net/http"
@@ -23,7 +23,7 @@ var RunCmd = &cobra.Command{
 		}
 		defer resp.Body.Close()
 
-		body, err := os.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 
 		if err != nil {
 			log.Fatalf("Error request subscription link: %v", err)

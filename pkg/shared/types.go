@@ -26,3 +26,11 @@ type V2rayRule struct {
 	InboundTag  string `json:"inboundTag"`
 	OutboundTag string `json:"outboundTag"`
 }
+
+type OsubSubscription struct {
+	URL string `json:"url"`
+}
+
+type OsubConfig struct {
+	Subscriptions []OsubSubscription `json:"subscriptions"`
+}
