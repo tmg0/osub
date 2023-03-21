@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"osub/pkg/cmd"
+	"osub/pkg/console"
 )
 
 func main() {
-	if err := cmd.RootCmd.Execute(); err != nil {
+	if err := console.RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

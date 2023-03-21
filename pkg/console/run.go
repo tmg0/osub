@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"io"
 	"log"
-  "strings"
 	"net/http"
-  "github.com/spf13/cobra"
 	"osub/pkg/parser"
 	"osub/pkg/shared"
+	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 var RunCmd = &cobra.Command{
-  Use:   "run",
-  Short: "Run the osub service",
-  Run: func(cmd *cobra.Command, args []string) {
+	Use:   "run",
+	Short: "Run the osub service",
+	Run: func(cmd *cobra.Command, args []string) {
 		conf, err := shared.ReadConfig()
 
 		if err != nil {
@@ -53,9 +54,9 @@ var RunCmd = &cobra.Command{
 				}
 			}
 		}
-  },
+	},
 }
 
 func init() {
-  RootCmd.AddCommand(RunCmd)
+	RootCmd.AddCommand(RunCmd)
 }
