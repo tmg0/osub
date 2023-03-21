@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"log"
   "strings"
 	"net/http"
@@ -18,34 +18,34 @@ var RunCmd = &cobra.Command{
   Run: func(cmd *cobra.Command, args []string) {
     resp, err := http.Get("")
 
-	if err != nil {
-		fmt.Println("Error fetching subscription: ", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		log.Fatalf("Error request subscription link: %v", err)
-	}
-
-	links, err := parser.Subscription(string(body))
-
-	if err != nil {
-		log.Fatalf("Error parsing Subscription link: %v", err)
-	}
-
-	for _, link := range *links {
-		if strings.HasPrefix(link, shared.VMESS_PREFIX) {
-			config, err := parser.Vmess(link)
-
-			if err != nil {
-				log.Fatalf("Error parsing Vmess link: %v", err)
-			}
-
-			fmt.Println(config)
+		if err != nil {
+			fmt.Println("Error fetching subscription: ", err)
 		}
-	}
+		defer resp.Body.Close()
+
+		body, err := os.ReadAll(resp.Body)
+
+		if err != nil {
+			log.Fatalf("Error request subscription link: %v", err)
+		}
+
+		links, err := parser.Subscription(string(body))
+
+		if err != nil {
+			log.Fatalf("Error parsing Subscription link: %v", err)
+		}
+
+		for _, link := range *links {
+			if strings.HasPrefix(link, shared.VMESS_PREFIX) {
+				config, err := parser.Vmess(link)
+
+				if err != nil {
+					log.Fatalf("Error parsing Vmess link: %v", err)
+				}
+
+				fmt.Println(config)
+			}
+		}
   },
 }
 
