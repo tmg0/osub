@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"osub/pkg/parser"
+	"osub/pkg/resolve"
 	"osub/pkg/shared"
 	"strings"
 	"time"
@@ -31,12 +32,6 @@ var RunCmd = &cobra.Command{
 					fmt.Println("Error fetching subscription: ", err)
 				}
 
-				err = resp.Body.Close()
-
-				if err != nil {
-					log.Fatalf("Response closed error: %v", err)
-				}
-
 				body, err := io.ReadAll(resp.Body)
 
 				if err != nil {
@@ -60,9 +55,15 @@ var RunCmd = &cobra.Command{
 						fmt.Println(config)
 					}
 				}
+
+				err = resp.Body.Close()
+
+				if err != nil {
+					log.Fatalf("Response closed error: %v", err)
+				}
 			}
 
-			duration, err := parser.Interval(conf.Interval)
+			duration, err := resolve.Interval(conf.Interval)
 
 			if err != nil {
 				log.Fatalf("Error parsing Interval string: %v", err)
