@@ -8,6 +8,7 @@ import (
 	"osub/pkg/parser"
 	"osub/pkg/shared"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -22,37 +23,52 @@ var RunCmd = &cobra.Command{
 			fmt.Println("Cannot read osub config json file: ", err)
 		}
 
-		for _, sub := range conf.Subscriptions {
-			resp, err := http.Get(sub.URL)
+		for {
+			for _, sub := range conf.Subscriptions {
+				resp, err := http.Get(sub.URL)
 
-			if err != nil {
-				fmt.Println("Error fetching subscription: ", err)
-			}
-			defer resp.Body.Close()
+				if err != nil {
+					fmt.Println("Error fetching subscription: ", err)
+				}
 
-			body, err := io.ReadAll(resp.Body)
+				err = resp.Body.Close()
 
-			if err != nil {
-				log.Fatalf("Error request subscription link: %v", err)
-			}
+				if err != nil {
+					log.Fatalf("Response closed error: %v", err)
+				}
 
-			links, err := parser.Subscription(string(body))
+				body, err := io.ReadAll(resp.Body)
 
-			if err != nil {
-				log.Fatalf("Error parsing Subscription link: %v", err)
-			}
+				if err != nil {
+					log.Fatalf("Error request subscription link: %v", err)
+				}
 
-			for _, link := range links {
-				if strings.HasPrefix(link, shared.VMESS_PREFIX) {
-					config, err := parser.Vmess(link)
+				links, err := parser.Subscription(string(body))
 
-					if err != nil {
-						log.Fatalf("Error parsing Vmess link: %v", err)
+				if err != nil {
+					log.Fatalf("Error parsing Subscription link: %v", err)
+				}
+
+				for _, link := range links {
+					if strings.HasPrefix(link, shared.VMESS_PREFIX) {
+						config, err := parser.Vmess(link)
+
+						if err != nil {
+							log.Fatalf("Error parsing Vmess link: %v", err)
+						}
+
+						fmt.Println(config)
 					}
-
-					fmt.Println(config)
 				}
 			}
+
+			duration, err := parser.Interval(conf.Interval)
+
+			if err != nil {
+				log.Fatalf("Error parsing Interval string: %v", err)
+			}
+
+			time.Sleep(duration)
 		}
 	},
 }

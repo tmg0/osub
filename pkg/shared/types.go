@@ -32,5 +32,6 @@ type OsubSubscription struct {
 }
 
 type OsubConfig struct {
+	Interval      string              `json:"interval"`
 	Subscriptions []*OsubSubscription `json:"subscriptions"`
 }
