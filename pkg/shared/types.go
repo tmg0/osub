@@ -32,5 +32,5 @@ type OsubSubscription struct {
 }
 
 type OsubConfig struct {
-	Subscriptions []OsubSubscription `json:"subscriptions"`
+	Subscriptions []*OsubSubscription `json:"subscriptions"`
 }

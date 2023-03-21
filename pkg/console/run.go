@@ -42,7 +42,7 @@ var RunCmd = &cobra.Command{
 				log.Fatalf("Error parsing Subscription link: %v", err)
 			}
 
-			for _, link := range *links {
+			for _, link := range links {
 				if strings.HasPrefix(link, shared.VMESS_PREFIX) {
 					config, err := parser.Vmess(link)
 
