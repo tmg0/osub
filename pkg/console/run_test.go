@@ -7,5 +7,5 @@ import (
 
 func TestRun(t *testing.T) {
 	conf, _ := shared.ReadConfig()
-	Setup(conf)
+	setup(conf)
 }

@@ -26,7 +26,7 @@ var RunCmd = &cobra.Command{
 		}
 
 		for {
-			Setup(conf)
+			setup(conf)
 
 			duration, err := resolve.Interval(conf.Interval)
 
@@ -43,7 +43,7 @@ func init() {
 	RootCmd.AddCommand(RunCmd)
 }
 
-func Setup(conf *types.OsubConfig) {
+func setup(conf *types.OsubConfig) {
 	for _, sub := range conf.Subscriptions {
 		resp, err := http.Get(sub.URL)
 
