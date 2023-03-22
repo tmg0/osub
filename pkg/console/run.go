@@ -8,6 +8,7 @@ import (
 	"osub/pkg/parser"
 	"osub/pkg/resolve"
 	"osub/pkg/shared"
+	"osub/pkg/shared/types"
 	"strings"
 	"time"
 
@@ -25,43 +26,7 @@ var RunCmd = &cobra.Command{
 		}
 
 		for {
-			for _, sub := range conf.Subscriptions {
-				resp, err := http.Get(sub.URL)
-
-				if err != nil {
-					fmt.Println("Error fetching subscription: ", err)
-				}
-
-				body, err := io.ReadAll(resp.Body)
-
-				if err != nil {
-					log.Fatalf("Error request subscription link: %v", err)
-				}
-
-				links, err := parser.Subscription(string(body))
-
-				if err != nil {
-					log.Fatalf("Error parsing Subscription link: %v", err)
-				}
-
-				for _, link := range links {
-					if strings.HasPrefix(link, shared.VMESS_PREFIX) {
-						config, err := parser.Vmess(link)
-
-						if err != nil {
-							log.Fatalf("Error parsing Vmess link: %v", err)
-						}
-
-						fmt.Println(config)
-					}
-				}
-
-				err = resp.Body.Close()
-
-				if err != nil {
-					log.Fatalf("Response closed error: %v", err)
-				}
-			}
+			Setup(conf)
 
 			duration, err := resolve.Interval(conf.Interval)
 
@@ -76,4 +41,54 @@ var RunCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(RunCmd)
+}
+
+func Setup(conf *types.OsubConfig) {
+	for _, sub := range conf.Subscriptions {
+		resp, err := http.Get(sub.URL)
+
+		if err != nil {
+			fmt.Println("Error fetching subscription: ", err)
+		}
+
+		body, err := io.ReadAll(resp.Body)
+
+		if err != nil {
+			log.Fatalf("Error request subscription link: %v", err)
+		}
+
+		links, err := parser.Subscription(string(body))
+
+		if err != nil {
+			log.Fatalf("Error parsing Subscription link: %v", err)
+		}
+
+		for _, link := range links {
+			if strings.HasPrefix(link, shared.VMESS_PREFIX) {
+				config, err := parser.Vmess(link)
+
+				if err != nil {
+					log.Fatalf("Error parsing Vmess link: %v", err)
+				}
+
+				fmt.Println(config)
+			}
+
+			if strings.HasPrefix(link, shared.SS_PREFIX) {
+				config, err := parser.Ss(link)
+
+				if err != nil {
+					log.Fatalf("Error parsing Vmess link: %v", err)
+				}
+
+				fmt.Println(config)
+			}
+		}
+
+		err = resp.Body.Close()
+
+		if err != nil {
+			log.Fatalf("Response closed error: %v", err)
+		}
+	}
 }
