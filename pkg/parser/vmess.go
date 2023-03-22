@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"osub/pkg/shared"
+	"osub/pkg/shared/types"
+	"strconv"
 	"strings"
 )
 
@@ -18,8 +20,9 @@ type VmessConfig struct {
 	Tls  string `json:"tls"`
 }
 
-func Vmess(link string) (*VmessConfig, error) {
+func Vmess(link string) (*types.OsubServerConfig, error) {
 	var vmessConfig VmessConfig
+	var conf types.OsubServerConfig
 
 	// Remove vmess prefix
 	link = strings.TrimPrefix(link, shared.VMESS_PREFIX)
@@ -36,5 +39,14 @@ func Vmess(link string) (*VmessConfig, error) {
 		return nil, err
 	}
 
-	return &vmessConfig, nil
+	conf.Type = shared.VMESS
+	conf.Address = vmessConfig.Add
+	conf.Port, err = strconv.Atoi(vmessConfig.Port)
+	conf.Password = vmessConfig.ID
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &conf, nil
 }

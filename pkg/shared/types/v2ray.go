@@ -29,7 +29,7 @@ type V2rayServerObject struct {
 
 type V2rayUserObject struct {
 	ID       string `json:"id"`
-	AlterId  int    `json:"alterId"`
+	AlterID  int    `json:"alterId"`
 	Security string `json:"security"`
 	Level    string `json:"level"`
 }
