@@ -11,14 +11,25 @@ type V2rayLog struct {
 }
 
 type V2rayOutbound struct {
-	Protocol    string      `json:"protocol"`
-	SendThrough string      `json:"sendThrough"`
-	Tag         string      `json:"tag"`
-	Settings    interface{} `json:"settings"`
+	Protocol    string                `json:"protocol"`
+	SendThrough *string               `json:"sendThrough"`
+	Tag         string                `json:"tag"`
+	Settings    V2rayOutboundSettings `json:"settings"`
 }
 
-type V2rayVmessOutbound struct {
-	Address string `json:"address"`
-	Port    int    `json:"port"`
-	UUID    string `json:"uuid"`
+type V2rayOutboundSettings struct {
+	Vnext []V2rayServerObject `json:"vnext"`
+}
+
+type V2rayServerObject struct {
+	Address string            `json:"address"`
+	Port    int               `json:"port"`
+	Users   []V2rayUserObject `json:"users"`
+}
+
+type V2rayUserObject struct {
+	ID       string `json:"id"`
+	AlterId  int    `json:"alterId"`
+	Security string `json:"security"`
+	Level    string `json:"level"`
 }
