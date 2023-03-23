@@ -1,7 +1,9 @@
 package shared
 
 const (
-	VMESS         = "Vmess"
+	SHADOWSOCKS = "Shadowsocks"
+	VMESS       = "Vmess"
+
 	VMESS_PREFIX  = "vmess://"
 	TROJAN_PREFIX = "trojan://"
 	SS_PREFIX     = "ss://"

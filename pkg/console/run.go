@@ -26,7 +26,13 @@ var RunCmd = &cobra.Command{
 		}
 
 		for {
-			setup(conf)
+			servers, err := setup(conf)
+
+			if err != nil {
+				log.Fatalf("%v", err)
+			}
+
+			fmt.Println((servers))
 
 			duration, err := resolve.Interval(conf.Interval)
 
@@ -43,12 +49,14 @@ func init() {
 	RootCmd.AddCommand(RunCmd)
 }
 
-func setup(conf *types.OsubConfig) {
+func setup(conf *types.OsubConfig) ([]types.OsubServerConfig, error) {
+	var servers []types.OsubServerConfig
+
 	for _, sub := range conf.Subscriptions {
 		resp, err := http.Get(sub.URL)
 
 		if err != nil {
-			fmt.Println("Error fetching subscription: ", err)
+			log.Fatalf("Error fetching subscription: %v", err)
 		}
 
 		body, err := io.ReadAll(resp.Body)
@@ -71,17 +79,17 @@ func setup(conf *types.OsubConfig) {
 					log.Fatalf("Error parsing Vmess link: %v", err)
 				}
 
-				fmt.Println(config)
+				servers = append(servers, *config)
 			}
 
 			if strings.HasPrefix(link, shared.SS_PREFIX) {
-				config, err := parser.Ss(link)
+				config, err := parser.Shadowsocks(link)
 
 				if err != nil {
 					log.Fatalf("Error parsing Vmess link: %v", err)
 				}
 
-				fmt.Println(config)
+				servers = append(servers, *config)
 			}
 		}
 
@@ -91,4 +99,6 @@ func setup(conf *types.OsubConfig) {
 			log.Fatalf("Response closed error: %v", err)
 		}
 	}
+
+	return servers, nil
 }

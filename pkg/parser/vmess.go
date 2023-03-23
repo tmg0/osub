@@ -40,7 +40,7 @@ func Vmess(link string) (*types.OsubServerConfig, error) {
 	}
 
 	conf.Type = shared.VMESS
-	conf.Address = vmessConfig.Add
+	conf.Address = vmessConfig.Ps
 	conf.Port, err = strconv.Atoi(vmessConfig.Port)
 	conf.Password = vmessConfig.ID
 
