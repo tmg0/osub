@@ -2,29 +2,28 @@ package shared
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"osub/pkg/shared/types"
 	"path/filepath"
 )
 
-func OptionalArg[T any](args []T) (*T, error) {
+func OptionalArg[T any](args []T) *T {
 	if len(args) == 1 {
-		return &args[0], nil
+		return &args[0]
 	}
 
-	return nil, fmt.Errorf("invalidate args")
+	return nil
 }
 
-func WithDefault[T any](arg *T, defaultValue func() (*T, error)) (*T, error) {
+func WithDefault[T any](arg *T, defaultValue func() (*T, error)) (T, error) {
 	if arg == nil {
 		res, err := defaultValue()
 		if err != nil {
-			return nil, err
+			return *arg, err
 		}
-		return res, nil
+		return *res, nil
 	}
-	return arg, nil
+	return *arg, nil
 }
 
 func Cwd() (*string, error) {
@@ -36,13 +35,13 @@ func Cwd() (*string, error) {
 }
 
 func ReadConfig(args ...string) (config *types.OsubConfig, err error) {
-	arg, _ := OptionalArg(args)
-	dir, err := WithDefault(arg, Cwd)
+
+	dir, err := WithDefault(OptionalArg(args), Cwd)
 	if err != nil {
 		return nil, err
 	}
 
-	path := filepath.Join(filepath.Dir(*dir), CONFIG_FILE_NAME)
+	path := filepath.Join(filepath.Dir(dir), CONFIG_FILE_NAME)
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
