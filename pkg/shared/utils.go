@@ -35,7 +35,6 @@ func Cwd() (*string, error) {
 }
 
 func ReadConfig(args ...string) (config *types.OsubConfig, err error) {
-
 	dir, err := WithDefault(OptionalArg(args), Cwd)
 	if err != nil {
 		return nil, err
