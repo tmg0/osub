@@ -1,10 +1,11 @@
 package shared
 
 import (
-	"encoding/json"
 	"os"
 	"osub/pkg/shared/types"
 	"path/filepath"
+
+	"github.com/spf13/viper"
 )
 
 func OptionalArg[T any](args []T) *T {
@@ -40,16 +41,18 @@ func ReadConfig(args ...string) (config *types.OsubConfig, err error) {
 		return nil, err
 	}
 
-	path := filepath.Join(filepath.Dir(dir), CONFIG_FILE_NAME)
-	file, err := os.Open(path)
-	if err != nil {
+	viper.AddConfigPath(filepath.Dir(dir))
+	viper.AddConfigPath(".")
+	viper.SetConfigName(CONFIG_FILE_NAME)
+	viper.SetConfigType("json")
+
+	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
 	}
-	defer file.Close()
 
-	var conf = new(types.OsubConfig)
-	err = json.NewDecoder(file).Decode(conf)
-	if err != nil {
+	var conf *types.OsubConfig
+
+	if err := viper.Unmarshal(&config); err != nil {
 		return nil, err
 	}
 
