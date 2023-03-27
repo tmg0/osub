@@ -1,12 +1,16 @@
 package shared
 
 import (
+	"fmt"
 	"os"
 	"osub/pkg/shared/types"
 	"path/filepath"
 
 	"github.com/spf13/viper"
 )
+
+var OSUB_CONFIG = viper.New()
+var V2RAY_CONFIG = viper.New()
 
 func OptionalArg[T any](args []T) *T {
 	if len(args) == 1 {
@@ -41,18 +45,44 @@ func ReadConfig(args ...string) (config *types.OsubConfig, err error) {
 		return nil, err
 	}
 
-	viper.AddConfigPath(filepath.Dir(dir))
-	viper.AddConfigPath(".")
-	viper.SetConfigName(CONFIG_FILE_NAME)
-	viper.SetConfigType("json")
+	OSUB_CONFIG.AddConfigPath(filepath.Dir(dir))
+	OSUB_CONFIG.AddConfigPath(".")
+	OSUB_CONFIG.SetConfigName(CONFIG_FILE_NAME)
+	OSUB_CONFIG.SetConfigType("json")
 
-	if err := viper.ReadInConfig(); err != nil {
+	if err := OSUB_CONFIG.ReadInConfig(); err != nil {
 		return nil, err
 	}
 
 	var conf *types.OsubConfig
 
-	if err := viper.Unmarshal(&config); err != nil {
+	if err := OSUB_CONFIG.Unmarshal(&conf); err != nil {
+		return nil, err
+	}
+
+	return conf, nil
+}
+
+func ReadV2rayConfig(v2ray *types.OsubV2rayConfig) (*types.V2rayConfig, error) {
+	if v2ray == nil {
+		return nil, fmt.Errorf("invalidate v2ray config file path")
+	}
+
+	if v2ray.Config == nil {
+		return nil, fmt.Errorf("invalidate v2ray config file path")
+	}
+
+	V2RAY_CONFIG.AddConfigPath("../")
+	V2RAY_CONFIG.SetConfigFile("v2ray.config")
+	V2RAY_CONFIG.SetConfigType("json")
+
+	if err := V2RAY_CONFIG.ReadInConfig(); err != nil {
+		return nil, err
+	}
+
+	var conf *types.V2rayConfig
+
+	if err := V2RAY_CONFIG.Unmarshal(&conf); err != nil {
 		return nil, err
 	}
 
