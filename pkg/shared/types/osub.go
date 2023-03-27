@@ -7,6 +7,8 @@ type OsubSubscription struct {
 type OsubConfig struct {
 	Interval      string              `json:"interval"`
 	Subscriptions []*OsubSubscription `json:"subscriptions"`
+	V2ray         *OsubV2rayConfig    `json:"v2ray"`
+	Clash         *OsubClashConfig    `json:"clash"`
 }
 
 type OsubServerConfig struct {
@@ -19,4 +21,12 @@ type OsubServerConfig struct {
 	AlterID  *string
 	Remarks  *string
 	SNI      *string
+}
+
+type OsubV2rayConfig struct {
+	Config *string `json:"config"`
+}
+
+type OsubClashConfig struct {
+	Config *string `json:"config"`
 }
